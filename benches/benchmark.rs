@@ -1,15 +1,15 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use tween::{Linear, Tweener};
 
 #[inline(never)]
-#[no_mangle]
+#[unsafe(no_mangle)]
 fn bencher_function(i: &mut [Tweener<f32, f32, Linear>]) {
     let mut output = 0.0;
     for tweener in i.iter_mut() {
         output += tweener.move_to(5.5);
     }
 
-    black_box(output);
+    std::hint::black_box(output);
 }
 
 fn criterion_benchmark(c: &mut Criterion) {
@@ -20,7 +20,7 @@ fn criterion_benchmark(c: &mut Criterion) {
             bencher_function(&mut input);
         });
 
-        black_box(&input);
+        std::hint::black_box(&input);
     });
 }
 
